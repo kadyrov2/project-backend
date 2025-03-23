@@ -7,7 +7,7 @@ pipeline {
         BACKEND_DIR = 'backend'   // Путь к проекту бэкенда
         CLUSTER_NAME = 'tim-cluster'
         PUBLISH_OUTPUT_DIR = 'publish' // Папка для опубликованных файлов
-        DOCKER_IMAGE_BACKEND="${DOCKER_REGISTRY}/backend-app:${GIT_COMMIT:0:6}-${BUILD_NUMBER}"
+        DOCKER_IMAGE_BACKEND="${DOCKER_REGISTRY}/backend-app:${GIT_COMMIT}".take(6)-"${BUILD_NUMBER}"
     }
 
     stages {
