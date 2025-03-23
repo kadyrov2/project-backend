@@ -47,7 +47,7 @@ pipeline {
                             --namespace ${NAMESPACE} \
                             --create-namespace \
                             --set replicaCount=2 \
-                            --set service.type=LoadBalancer
+                            --set service.type=LoadBalancer \
                             --set image.tag=${params.IMAGE_TAG}
                     """
                 }
