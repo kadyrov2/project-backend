@@ -20,7 +20,7 @@ pipeline {
             stage('Build Backend') {
                 steps {
                     script {
-                        sh 'printenv |grep COMMIT'
+                        sh 'printenv '
                         echo 'Сборка бэкенда...'
                         dir(BACKEND_DIR) {
                             // sh 'yes | docker system prune -a' 
