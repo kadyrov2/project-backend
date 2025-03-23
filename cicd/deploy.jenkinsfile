@@ -11,7 +11,7 @@ pipeline {
 
     parameters {
         booleanParam(name: 'DELETE_DEPLOY', defaultValue: false, description: 'Удалить деплой ?')
-         stringParam(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Тег образа для деплоя')
+         string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Тег образа для деплоя')
     }
 
     stages {
