@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    environment {
+        CLUSTER_NAME = 'tim-cluster'
+        NAMESPACE = 'default'
+        HELM_RELEASE_NAME = 'nginx'
+        HELM_CHART_PATH = './cicd/helm/'
+
+    }
+
+    parameters {
+        booleanParam(name: 'DELETE_DEPLOY', defaultValue: false, description: 'Удалить деплой ?')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kadyrov2/project.git'
+            }
+        }
+
+         stage('login Yandex Container Registry') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'yandex-cloud-sa-key', variable: 'SA_KEY_FILE')]) {
+                    sh """
+                        ~/yandex-cloud/bin/yc config set service-account-key ${SA_KEY_FILE}
+                    """
+                    }
+                    sh """
+                        ~/yandex-cloud/bin/yc managed-kubernetes cluster get-credentials ${CLUSTER_NAME} --external --force
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Nginx with Helm') {
+              when {
+                expression { params.DELETE_DEPLOY == false }
+            }
+            steps {
+                script {
+                    sh """
+                        helm upgrade --install ${HELM_RELEASE_NAME} ${HELM_CHART_PATH} \
+                            --namespace ${NAMESPACE} \
+                            --create-namespace \
+                            --set replicaCount=2 \
+                            --set service.type=LoadBalancer
+                    """
+                }
+            }
+        }
+
+        stage('Optional: Delete Deployment') {
+            when {
+                expression { params.DELETE_DEPLOY == true }
+            }
+            steps {
+                script {
+                    sh """
+                        helm uninstall ${HELM_RELEASE_NAME} --namespace ${NAMESPACE}
+                    """
+                    echo "Деплой ${HELM_RELEASE_NAME} успешно удален."
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Nginx успешно развернут с помощью Helm в Yandex Managed Kubernetes!'
+        }
+        failure {
+            echo 'Ошибка при развертывании Nginx с помощью Helm.'
+        }
+    }
+}

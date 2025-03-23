@@ -1,0 +1,129 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REGISTRY = 'cr.yandex/crppq9qttclm6v54ocop'
+        FRONTEND_DIR = 'frontend' // Путь к проекту фронтенда
+        BACKEND_DIR = 'backend'   // Путь к проекту бэкенда
+        CLUSTER_NAME = 'tim-cluster'
+        PUBLISH_OUTPUT_DIR = 'publish' // Папка для опубликованных файлов
+        DOCKER_IMAGE_FRONTEND = "${DOCKER_REGISTRY}/frontend-app:${BUILD_NUMBER}"
+        DOCKER_IMAGE_BACKEND = "${DOCKER_REGISTRY}/backend-app:${BUILD_NUMBER}"
+        
+    }
+
+    stages {
+            stage('Checkout') {
+                steps {
+                    checkout scm
+                }
+            }
+
+            // stage('Build Frontend') {
+            //     steps {
+            //         script {
+            //             echo 'Сборка фронтенда...'
+            //             dir(FRONTEND_DIR) {
+            //                 sh 'dotnet restore'
+            //                 sh 'dotnet build --configuration Release'
+            //             }
+            //         }
+            //     }
+            // }
+
+            stage('Build Backend') {
+                steps {
+                    script {
+                        echo 'Сборка бэкенда...'
+                        dir(BACKEND_DIR) {
+                            // sh 'yes | docker system prune -a' 
+                            sh 'dotnet restore'
+                            sh 'dotnet build  --configuration Release'
+                        }
+                    }
+                }
+            }
+
+   
+
+        // stage('Publish Frontend') {
+        //     steps {
+        //         script {
+        //             echo 'Публикация фронтенда...'
+        //             dir(FRONTEND_DIR) {
+        //                 sh "dotnet publish --configuration Release --output ${PUBLISH_OUTPUT_DIR}/frontend"
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('Publish Backend') {
+            steps {
+                script {
+                    echo 'Публикация бэкенда...'
+                    dir(BACKEND_DIR) {
+                        sh "dotnet publish --configuration Release --output ${PUBLISH_OUTPUT_DIR}/backend"
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    echo 'Сборка Docker-образов...'
+                    // // Сборка образа для фронтенда
+                    // dir(FRONTEND_DIR) {
+                    //     sh """
+                    //         docker build -t ${DOCKER_IMAGE_FRONTEND} .
+                    //     """
+                    // }
+                    // Сборка образа для бэкенда
+                    dir(BACKEND_DIR) {
+                        sh """
+                            docker build -t ${DOCKER_IMAGE_BACKEND} .
+                        """
+                    }
+                }
+            }
+        }
+
+         stage('login Yandex Container Registry') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'yandex-cloud-sa-key', variable: 'SA_KEY_FILE')]) {
+                    sh """
+                        ~/yandex-cloud/bin/yc config set service-account-key ${SA_KEY_FILE}
+                    """
+                    }
+                    sh """
+                        ~/yandex-cloud/bin/yc managed-kubernetes cluster get-credentials ${CLUSTER_NAME} --external --force
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    echo 'Публикация Docker-образов в реестр...'
+                    // sh "   yc container image create --name frontend-app --path ./ --tag 48 "
+                    //  sh "sudo docker push ${DOCKER_IMAGE_FRONTEND}"
+                    // Публикация образа бэкенда
+                     sh "sudo docker push ${DOCKER_IMAGE_BACKEND}"
+                }
+            }
+    
+        }
+    }
+    post {
+        success {
+            // Действия после успешного завершения пайплайна
+            echo 'Build and deploy completed successfully!'
+        }
+        failure {
+            // Действия в случае ошибки
+            echo 'Build or deploy failed!'
+        }
+    }
+}
