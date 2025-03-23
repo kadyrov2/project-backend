@@ -11,31 +11,24 @@ pipeline {
     }
 
     stages {
-            stage('Checkout') {
-                steps {
-                    checkout scm
-                }
+        stage('Checkout') {
+            steps {
+                checkout scm
             }
+        }
 
-            stage("buildName") {
-                steps {
-
-                    buildName "${GIT_COMMIT[0..5]}-${BUILD_NUMBER}"
-                }
-            }
-
-            stage('Build Backend') {
-                steps {
-                    script {
-                        echo 'Сборка бэкенда...'
-                        dir(BACKEND_DIR) {
-                            // sh 'yes | docker system prune -a' 
-                            sh 'dotnet restore'
-                            sh 'dotnet build  --configuration Release'
-                        }
+        stage('Build Backend') {
+            steps {
+                script {
+                    echo 'Сборка бэкенда...'
+                    dir(BACKEND_DIR) {
+                        // sh 'yes | docker system prune -a' 
+                        sh 'dotnet restore'
+                        sh 'dotnet build  --configuration Release'
                     }
                 }
             }
+        }
 
         stage('Publish Backend') {
             steps {
