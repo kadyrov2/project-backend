@@ -7,8 +7,8 @@ pipeline {
         BACKEND_DIR = 'backend'   // Путь к проекту бэкенда
         CLUSTER_NAME = 'tim-cluster'
         PUBLISH_OUTPUT_DIR = 'publish' // Папка для опубликованных файлов
-        DOCKER_IMAGE_BACKEND = "${DOCKER_REGISTRY}/backend-app:${BUILD_NUMBER}"
-        
+        GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
+        DOCKER_IMAGE_BACKEND="${DOCKER_REGISTRY}/backend-app:${BUILD_NUMBER}-${GIT_COMMIT_HASH}"    
     }
 
     stages {
