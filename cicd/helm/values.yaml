@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: cr.yandex/crppq9qttclm6v54ocop/frontend-app
   pullPolicy: IfNotPresent
-  tag: 55
+  tag: 
 
 imagePullSecrets: 
   - name: registry-credentials

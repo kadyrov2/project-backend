@@ -4,13 +4,14 @@ pipeline {
     environment {
         CLUSTER_NAME = 'tim-cluster'
         NAMESPACE = 'default'
-        HELM_RELEASE_NAME = 'nginx'
+        HELM_RELEASE_NAME = 'backend'
         HELM_CHART_PATH = './cicd/helm/'
 
     }
 
     parameters {
         booleanParam(name: 'DELETE_DEPLOY', defaultValue: false, description: 'Удалить деплой ?')
+         stringParam(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Тег образа для деплоя')
     }
 
     stages {
@@ -35,7 +36,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Nginx with Helm') {
+        stage('Deploy backend with Helm') {
               when {
                 expression { params.DELETE_DEPLOY == false }
             }
@@ -47,6 +48,7 @@ pipeline {
                             --create-namespace \
                             --set replicaCount=2 \
                             --set service.type=LoadBalancer
+                            --set image.tag=${params.IMAGE_TAG}
                     """
                 }
             }
@@ -69,10 +71,10 @@ pipeline {
 
     post {
         success {
-            echo 'Nginx успешно развернут с помощью Helm в Yandex Managed Kubernetes!'
+            echo 'backend успешно развернут с помощью Helm в Yandex Managed Kubernetes!'
         }
         failure {
-            echo 'Ошибка при развертывании Nginx с помощью Helm.'
+            echo 'Ошибка при развертывании backend с помощью Helm.'
         }
     }
 }
