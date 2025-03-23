@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: cr.yandex/crppq9qttclm6v54ocop/frontend-app
+  repository: cr.yandex/crppq9qttclm6v54ocop/beckend-app
   pullPolicy: IfNotPresent
   tag: 
 
