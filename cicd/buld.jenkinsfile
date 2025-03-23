@@ -17,11 +17,10 @@ pipeline {
                 }
             }
 
-            stage("Initialization") {
+            stage("buildName") {
                 steps {
-                    // use name of the patchset as the build name
-                    buildName "${GERRIT_CHANGE_SUBJECT}"
-                    buildDescription "Executed @ ${NODE_NAME}"
+
+                    buildName "${GIT_COMMIT[0..5]}-${BUILD_NUMBER}"
                 }
             }
 
