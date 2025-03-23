@@ -7,7 +7,7 @@ pipeline {
         BACKEND_DIR = 'backend'   // Путь к проекту бэкенда
         CLUSTER_NAME = 'tim-cluster'
         PUBLISH_OUTPUT_DIR = 'publish' // Папка для опубликованных файлов
-        DOCKER_IMAGE_BACKEND="${DOCKER_REGISTRY}/backend-app:${BUILD_NUMBER}-${GIT_COMMIT}" 
+        ${BUILD_NUMBER}="${DOCKER_REGISTRY}/backend-app:"${GIT_COMMIT}.take(6)-${BUILD_NUMBER} 
     }
 
     stages {
@@ -20,7 +20,6 @@ pipeline {
             stage('Build Backend') {
                 steps {
                     script {
-                        sh 'printenv '
                         echo 'Сборка бэкенда...'
                         dir(BACKEND_DIR) {
                             // sh 'yes | docker system prune -a' 
