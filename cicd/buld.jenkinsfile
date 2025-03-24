@@ -72,7 +72,7 @@ pipeline {
             steps {
                 build job: 'Deploy/backend', 
                       parameters: [
-                          booleanParam(name: 'DELETE_DEPLOY', value: true ),
+                        //   booleanParam(name: 'DELETE_DEPLOY', value: true ),
                           string(name: 'IMAGE_TAG', value: "${GIT_COMMIT[0..5]}-${BUILD_NUMBER}"),
                           // Другие параметры, если нужно
                       ]
