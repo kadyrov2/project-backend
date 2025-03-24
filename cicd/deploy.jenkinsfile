@@ -24,16 +24,10 @@ pipeline {
          stage('Create token IAM_TOKEN') {
              steps {
                  script {
-                     // Создаем IAM-токен
-                     sh """
-                         export IAM_TOKEN=` ~/yandex-cloud/bin/yc iam create-token`
-                     """
- 
-                     // Логинимся в Yandex Container Registry
                      sh """
                          sudo docker login cr.yandex \
                              --username iam \
-                             --password ${IAM_TOKEN}
+                             --password ${~/yandex-cloud/bin/yc iam create-token}
                      """
                  }
              }
