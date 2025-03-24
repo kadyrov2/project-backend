@@ -41,7 +41,9 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
+        app.Run("http://0.0.0.0:5000");     
+        
         app.UseHttpsRedirection();
 
         app.UseAuthorization();

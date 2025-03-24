@@ -35,6 +35,9 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+          - name: ASPNETCORE_URLS
+            value: "http://*:5000"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           imagePullSecrets:
           - name: registry-credentials-back
