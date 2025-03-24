@@ -17,7 +17,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/kadyrov2/project.git'
+                git branch: 'main', url: 'https://github.com/kadyrov2/project-backend.git'
             }
         }
 
