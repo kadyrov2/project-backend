@@ -25,7 +25,7 @@ pipeline {
              steps {
                  script {
                    sh '''
-                        IAM_TOKEN=$(yc iam create-token)
+                        IAM_TOKEN=$(  ~/yandex-cloud/bin/yc iam create-token)
                         docker login cr.yandex \
                             --username iam \
                             --password "${IAM_TOKEN}"
