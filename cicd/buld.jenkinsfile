@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-         stage('login Yandex Container Registry') {
+         stage('Login Yandex Container Registry') {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'yandex-cloud-sa-key', variable: 'SA_KEY_FILE')]) {
@@ -65,6 +65,16 @@ pipeline {
                         ~/yandex-cloud/bin/yc managed-kubernetes cluster get-credentials ${CLUSTER_NAME} --external --force
                     """
                 }
+            }
+        }
+
+          stage('Deploy') {
+            steps {
+                build job: 'Deploy/backend', 
+                      parameters: [
+                          string(name: 'IMAGE_TAG', value: "${GIT_COMMIT[0..5]}-${BUILD_NUMBER}"),
+                          // Другие параметры, если нужно
+                      ]
             }
         }
 
