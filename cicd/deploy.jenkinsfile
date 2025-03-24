@@ -21,6 +21,24 @@ pipeline {
             }
         }
 
+         stage('Create token IAM_TOKEN') {
+             steps {
+                 script {
+                     // Создаем IAM-токен
+                     sh """
+                         export IAM_TOKEN=`yc iam create-token`
+                     """
+ 
+                     // Логинимся в Yandex Container Registry
+                     sh """
+                         sudo docker login cr.yandex \
+                             --username iam \
+                             --password ${IAM_TOKEN}
+                     """
+                 }
+             }
+         }
+
          stage('login Yandex Container Registry') {
             steps {
                 script {
@@ -53,6 +71,8 @@ pipeline {
                 }
             }
         }
+
+
 
         stage('Optional: Delete Deployment') {
             when {
