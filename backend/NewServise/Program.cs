@@ -41,14 +41,14 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        
+
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
         app.MapControllers();
 
-        app.Run();
+        app.Run("http://0.0.0.0:5000");
 
         _tGBot.Start();
 
