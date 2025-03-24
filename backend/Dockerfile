@@ -41,9 +41,8 @@ RUN apt-get update \
 USER app
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
-FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime:8.0} AS final
+FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/aspnet:8.0} AS final
 WORKDIR /app
-EXPOSE 5000
+EXPOSE 8080
 COPY --from=publish /app/publish .
-ENTRYPOINT ["./NewServise"]
-
+ENTRYPOINT ["dotnet", "NewServise.dll"]
