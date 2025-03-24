@@ -9,7 +9,7 @@ ARG FINAL_BASE_IMAGE=${LAUNCHING_FROM_VS:+aotdebug}
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
+EXPOSE 5000
 
 
 # Этот этап используется для сборки проекта службы
@@ -41,8 +41,9 @@ RUN apt-get update \
 USER app
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
-FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:8.0} AS final
+FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime:8.0} AS final
 WORKDIR /app
-EXPOSE 8080
+EXPOSE 5000
 COPY --from=publish /app/publish .
 ENTRYPOINT ["./NewServise"]
+

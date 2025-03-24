@@ -21,8 +21,8 @@ internal class Program
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                options.JsonSerializerOptions.WriteIndented = true; // Для красивого форматирования JSON
-                options.JsonSerializerOptions.IgnoreNullValues = true; // Игнорировать null-значения
+                options.JsonSerializerOptions.WriteIndented = true; 
+                options.JsonSerializerOptions.IgnoreNullValues = true; 
             });
 
         builder.Services.AddSingleton<IConnectionMultiplexer>(options =>
