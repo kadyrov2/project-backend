@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_REGISTRY = 'cr.yandex/crppq9qttclm6v54ocop'
-        BACKEND_DIR = 'backend'   // Путь к проекту бэкенда
+        BACKEND_DIR = 'backend/NewServise'   // Путь к проекту бэкенда
         CLUSTER_NAME = 'tim-cluster'
         PUBLISH_OUTPUT_DIR = 'publish' // Папка для опубликованных файлов
         DOCKER_IMAGE_BACKEND = "${DOCKER_REGISTRY}/backend-app:${GIT_COMMIT[0..5]}-${BUILD_NUMBER}"
