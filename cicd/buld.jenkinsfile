@@ -21,7 +21,7 @@ pipeline {
                 script {
                     echo 'Сборка бэкенда...'
                     dir(BACKEND_DIR) {
-                        // sh 'yes | docker system prune -a' 
+                        sh 'yes | docker system prune -a' 
                         sh 'dotnet restore'
                         sh 'dotnet build  --configuration Release'
                     }
