@@ -45,16 +45,6 @@ spec:
             - name: http
               containerPort: 5000
               protocol: TCP
-          env:
-          - name: DB_HOST
-            value: {{ .Values.app.env.DB_HOST }}
-          - name: DB_PORT
-            value: "{{ .Values.app.env.DB_PORT }}"
-          - name: DB_USER
-            value: {{ .Values.app.env.DB_USER }}
-          - name: DB_PASSWORD
-            value: {{ .Values.app.env.DB_PASSWORD }}
-          - name: DB_NAME
           value: {{ .Values.app.env.DB_NAME }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
