@@ -13,7 +13,7 @@ pipeline {
         string(name: 'IMAGE_TAG', defaultValue: '12', description: 'Тег образа для деплоя')
         choice(
             name: 'HELM_CHART_PATH',
-            choices: ['./cicd/helm', './helm/postgres', './charts/redis'],
+            choices: ['./cicd/helm', './cicd/postgres', './cicd/redis'],
             description: 'Путь к Helm-чарту'
         )
 
