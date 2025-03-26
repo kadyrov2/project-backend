@@ -11,7 +11,12 @@ pipeline {
     parameters {
         booleanParam(name: 'DELETE_DEPLOY', defaultValue: false, description: 'Удалить деплой ?')
         string(name: 'IMAGE_TAG', defaultValue: '12', description: 'Тег образа для деплоя')
-        string(name: 'HELM_CHART_PATH', defaultValue: './cicd/postgres', description: 'Путь для helm')
+        choice(
+            name: 'HELM_CHART_PATH',
+            choices: ['./cicd/helm', './helm/postgres', './charts/redis'],
+            description: 'Путь к Helm-чарту'
+        )
+
     }
 
     stages {
