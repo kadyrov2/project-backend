@@ -30,7 +30,8 @@ spec:
           value: {{ .Values.postgresql.database | quote }}
         volumeMounts:
         - name: postgresql-data
-          mountPath: /var/lib/postgresql/data
+          mountPath: /var/lib/postgresql/data/pgdata  # Ключевое изменение
+          subPath: pgdata
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       volumes:
