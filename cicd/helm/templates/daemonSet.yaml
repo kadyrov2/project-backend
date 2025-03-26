@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: docker-config-updater
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      name: docker-config-updater
+  template:
+    metadata:
+      labels:
+        name: docker-config-updater
+    spec:
+      containers:
+      - name: updater
+        image: alpine
+        command: ["sh", "-c"]
+        args:
+          - |
+            mkdir -p /root/.docker && 
+            echo '$DOCKER_CONFIG_JSON' > /root/.docker/config.json && 
+            while true; do sleep 86400; done
+        env:
+        - name: DOCKER_CONFIG_JSON
+          valueFrom:
+            secretKeyRef:
+              name: registry-credentials-back
+              key: .dockerconfigjson
+      volumes:
+      - name: docker-config
+        hostPath:
+          path: /root/.docker/config.json
+          type: FileOrCreate
