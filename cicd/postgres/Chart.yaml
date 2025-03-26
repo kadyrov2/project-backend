@@ -3,9 +3,3 @@ name: postgresql-12
 description: PostgreSQL 12 Helm Chart
 version: 0.1.0
 appVersion: "12.0"
-
-dependencies:
-  - name: postgresql-12
-    version: "0.1.0"
-    repository: "file://../postgresql-12"  # Локальный путь
-    condition: postgresql.enabled
