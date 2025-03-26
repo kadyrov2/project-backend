@@ -4,24 +4,26 @@ image:
   pullPolicy: IfNotPresent
 
 postgresql:
-  username: "postgres"
-  existingSecret: "{{ .Release.Name }}-postgresql-secret"  # Ссылка на Secret
-  database: "postgres"
+  username: postgres
+  password: postgres
+  database: postgres
   port: 5432
 
 persistence:
   enabled: true
-  size: 50Gi              # Больше места
-  storageClass: "ssd"      # Быстрое хранилище
-  accessMode: ReadWriteOnce
+  storageClass: "yc-network-hdd"
+  size: "10Gi"
+  accessModes: ["ReadWriteOnce"]
+  labels:
+    app: postgresql
 
 resources:
   requests:
-    memory: "2Gi"          # Больше RAM для продакшена
-    cpu: "500m"
+    memory: "512Mi"
+    cpu: "250m"
   limits:
-    memory: "4Gi"
-    cpu: "2"
+    memory: "1Gi"
+    cpu: "500m"
 
 service:
   type: ClusterIP
