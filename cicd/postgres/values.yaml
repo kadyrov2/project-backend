@@ -1,0 +1,33 @@
+# Общие настройки
+image:
+  repository: postgres
+  tag: "12"
+  pullPolicy: IfNotPresent
+
+# Настройки БД
+postgresql:
+  username: postgres
+  password: postgres
+  database: postgres
+  port: 5432
+
+# Персистентное хранилище
+persistence:
+  enabled: true
+  size: 8Gi
+  storageClass: ""
+  accessMode: ReadWriteOnce
+
+# Ресурсы
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"
+
+# Service
+service:
+  type: ClusterIP
+  port: 5432

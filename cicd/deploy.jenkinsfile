@@ -5,13 +5,13 @@ pipeline {
         CLUSTER_NAME = 'tim-cluster'
         NAMESPACE = 'default'
         HELM_RELEASE_NAME = 'backend'
-        HELM_CHART_PATH = './cicd/helm/'
         IAM_TOKEN =''
     }
 
     parameters {
         booleanParam(name: 'DELETE_DEPLOY', defaultValue: false, description: 'Удалить деплой ?')
-         string(name: 'IMAGE_TAG', defaultValue: '792a7f-19', description: 'Тег образа для деплоя')
+        string(name: 'IMAGE_TAG', defaultValue: '792a7f-19', description: 'Тег образа для деплоя')
+        string(name: 'HELM_CHART_PATH', defaultValue: './cicd/helm/', description: 'Путь для helm')
     }
 
     stages {
