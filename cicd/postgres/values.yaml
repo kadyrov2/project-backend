@@ -11,11 +11,10 @@ postgresql:
 
 persistence:
   enabled: true
-  storageClass: "yc-network-hdd"
+  storageClass: "yc-network-hdd"  # Правильный класс для Yandex Cloud
   size: "10Gi"
-  accessModes: ["ReadWriteOnce"]
-  labels:
-    app: postgresql
+  accessModes: 
+    - ReadWriteOnce  # Должен быть список с одним из поддерживаемых значений
 
 resources:
   requests:
