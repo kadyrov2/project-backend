@@ -37,13 +37,13 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           env:
           - name: ASPNETCORE_URLS
-            value: "http://*:8080"
+            value: "http://*:5000"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           imagePullSecrets:
           - name: registry-credentials-back
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 5000
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
