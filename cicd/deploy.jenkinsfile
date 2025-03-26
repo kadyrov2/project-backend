@@ -67,6 +67,9 @@ pipeline {
         }
 
         stage('Deploy backend with Helm') {
+           when {
+                expression { params.DELETE_DEPLOY == false }
+            }
             steps {
                 script {
                     sh """
