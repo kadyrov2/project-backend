@@ -67,13 +67,13 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Create token IAM_TOKEN') {
             steps {
                 script {
                 
                 def IAM_TOKEN = sh(returnStdout: true, script: '~/yandex-cloud/bin/yc iam create-token').trim()
-                
+                sh 'echo ' ${IAM_TOKEN}
                 sh """
                         docker login cr.yandex \
                             --username iam \
