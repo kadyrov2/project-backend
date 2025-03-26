@@ -45,7 +45,6 @@ spec:
             - name: http
               containerPort: 5000
               protocol: TCP
-          value: {{ .Values.app.env.DB_NAME }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
