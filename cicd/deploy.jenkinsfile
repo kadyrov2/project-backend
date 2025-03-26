@@ -28,7 +28,6 @@ pipeline {
                    def IAM_TOKEN = sh(returnStdout: true, script: '~/yandex-cloud/bin/yc iam create-token').trim()
                    
                    sh """
-                        IAM_TOKEN=$(  ~/yandex-cloud/bin/yc iam create-token)
                         docker login cr.yandex \
                             --username iam \
                             --password ${IAM_TOKEN}
