@@ -10,8 +10,8 @@ pipeline {
 
     parameters {
         booleanParam(name: 'DELETE_DEPLOY', defaultValue: false, description: 'Удалить деплой ?')
-        string(name: 'IMAGE_TAG', defaultValue: '792a7f-19', description: 'Тег образа для деплоя')
-        string(name: 'HELM_CHART_PATH', defaultValue: './cicd/helm/', description: 'Путь для helm')
+        string(name: 'IMAGE_TAG', defaultValue: '12', description: 'Тег образа для деплоя')
+        string(name: 'HELM_CHART_PATH', defaultValue: './cicd/postgres', description: 'Путь для helm')
     }
 
     stages {
@@ -76,7 +76,6 @@ pipeline {
                         helm upgrade --install ${HELM_RELEASE_NAME} ${HELM_CHART_PATH} \
                             --namespace ${NAMESPACE} \
                             --create-namespace \
-                            --set replicaCount=2 \
                             --set service.type=LoadBalancer \
                             --set image.tag=${params.IMAGE_TAG}
                     """
