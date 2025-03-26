@@ -49,10 +49,22 @@ pipeline {
             }
         }
 
-        stage('Deploy backend with Helm') {
-              when {
-                expression { params.DELETE_DEPLOY == false }
+
+        stage('Optional: Delete Deployment') {
+            when {
+                expression { params.DELETE_DEPLOY == true }
             }
+            steps {
+                script {
+                    sh """
+                        helm uninstall ${HELM_RELEASE_NAME} --namespace ${NAMESPACE}
+                    """
+                    echo "Деплой ${HELM_RELEASE_NAME} успешно удален."
+                }
+            }
+        }
+
+        stage('Deploy backend with Helm') {
             steps {
                 script {
                     sh """
@@ -68,20 +80,6 @@ pipeline {
         }
 
 
-
-        stage('Optional: Delete Deployment') {
-            when {
-                expression { params.DELETE_DEPLOY == true }
-            }
-            steps {
-                script {
-                    sh """
-                        helm uninstall ${HELM_RELEASE_NAME} --namespace ${NAMESPACE}
-                    """
-                    echo "Деплой ${HELM_RELEASE_NAME} успешно удален."
-                }
-            }
-        }
     }
 
     post {
