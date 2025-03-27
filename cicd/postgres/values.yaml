@@ -1,21 +1,17 @@
+# Общие настройки
+fullnameOverride: ""
+nameOverride: ""
+
+# Настройки образа PostgreSQL
 image:
   repository: postgres
-  tag: "12"
+  tag: 12-alpine
   pullPolicy: IfNotPresent
 
-postgresql:
-  username: postgres
-  password: postgres
-  database: postgres
-  port: 5432
-
-persistence:
-  enabled: true
-  storageClass: "yc-network-hdd"  # Правильный класс для Yandex Cloud
-  size: "10Gi"
-  accessModes: 
-    - ReadWriteOnce  # Должен быть список с одним из поддерживаемых значений
-
+# Настройки StatefulSet
+replicaCount: 1
+podAnnotations: {}
+podLabels: {}
 resources:
   requests:
     memory: "512Mi"
@@ -24,6 +20,49 @@ resources:
     memory: "1Gi"
     cpu: "500m"
 
+# Настройки PostgreSQL
+postgresql:
+  database: "myapp"
+  username: "postgres"
+  password: "changeme"
+  port: 5432
+  config:
+    max_connections: "100"
+    shared_buffers: "128MB"
+    effective_cache_size: "384MB"
+  initdbScripts: {}
+  # initdbScripts:
+  #   init.sql: |
+  #     CREATE DATABASE myapp;
+  #     CREATE USER myuser WITH ENCRYPTED PASSWORD 'mypassword';
+  #     GRANT ALL PRIVILEGES ON DATABASE myapp TO myuser;
+
+# Настройки хранилища
+persistence:
+  enabled: true
+  size: "10Gi"
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+
+# Настройки сервиса
 service:
   type: ClusterIP
   port: 5432
+  annotations: {}
+  labels: {}
+
+# Настройки readiness/liveness проб
+probes:
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 3
+  liveness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3

@@ -1,5 +1,5 @@
 apiVersion: v2
 name: postgresql-12
-description: PostgreSQL 12 Helm Chart
+description: PostgreSQL 12 StatefulSet for Kubernetes
 version: 0.1.0
-appVersion: "12.0"
+appVersion: 12.0

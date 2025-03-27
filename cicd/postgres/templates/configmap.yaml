@@ -1,0 +1,10 @@
+{{- if .Values.postgresql.initdbScripts }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "postgresql-12.fullname" . }}-init-scripts
+  labels:
+    {{- include "postgresql-12.labels" . | nindent 4 }}
+data:
+  {{- toYaml .Values.postgresql.initdbScripts | nindent 2 }}
+{{- end }}
