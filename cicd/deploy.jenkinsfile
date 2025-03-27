@@ -17,6 +17,12 @@ pipeline {
             description: 'Путь к Helm-чарту'
         )
 
+        def releaseNames = [
+                        './cicd/helm': 'backend',
+                        './cicd/postgres': 'postgres',
+                        './cicd/redis': 'redis-cache'
+                    ]
+        HELM_RELEASE_NAME = releaseNames.get(HELM_CHART_PATH, 'default-release')
     }
 
     stages {
@@ -57,7 +63,7 @@ pipeline {
         }
 
 
-        stage('Optional: Delete Deployment') {`
+        stage('Optional: Delete Deployment') {
             when {
                 expression { params.DELETE_DEPLOY == true }
             }
@@ -77,22 +83,6 @@ pipeline {
             }
             steps {
                 script {
-                    HELM_RELEASE_NAME = ''
-                        switch(HELM_CHART_PATH) {
-                            case './cicd/helm':
-                                HELM_RELEASE_NAME = 'backend'
-                                break
-                            case './cicd/postgres':
-                                HELM_RELEASE_NAME = 'postgres'
-                                break
-                            case './cicd/redis':
-                                HELM_RELEASE_NAME = 'redis-cache'
-                                break
-                            default:
-                                HELM_RELEASE_NAME = 'default-release'
-                                break
-                        }
-
                     sh """
                         helm upgrade --install ${HELM_RELEASE_NAME} ${HELM_CHART_PATH} \
                             --namespace ${NAMESPACE} \
