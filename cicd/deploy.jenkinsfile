@@ -16,13 +16,6 @@ pipeline {
             choices: ['./cicd/helm', './cicd/postgres', './cicd/redis'],
             description: 'Путь к Helm-чарту'
         )
-
-        def releaseNames = [
-                        './cicd/helm': 'backend',
-                        './cicd/postgres': 'postgres',
-                        './cicd/redis': 'redis-cache'
-                    ]
-        HELM_RELEASE_NAME = releaseNames.get(HELM_CHART_PATH, 'default-release')
     }
 
     stages {
@@ -63,7 +56,7 @@ pipeline {
         }
 
 
-        stage('Optional: Delete Deployment') {
+        stage('Delete Deployment') {
             when {
                 expression { params.DELETE_DEPLOY == true }
             }
