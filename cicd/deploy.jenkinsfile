@@ -70,30 +70,30 @@ pipeline {
             }
         }
 
-    stage('Deploy ') {
-        when {
-                expression { params.DELETE_DEPLOY == false }
-            }
-            steps {
-                script {
-                    def releaseNames = [
-                        './cicd/helm': 'backend',
-                        './cicd/postgres': 'postgres',
-                        './cicd/redis': 'redis-cache'
-                    ]
-                    HELM_RELEASE_NAME = releaseNames.get(params.HELM_CHART_PATH, 'default-release')
-                    
-                    sh """
-                        helm upgrade --install ${HELM_RELEASE_NAME} ${params.HELM_CHART_PATH} \
-                            --namespace ${NAMESPACE} \
-                            --create-namespace \
-                            --set service.type=LoadBalancer \
-                            --set image.tag=${params.IMAGE_TAG}
-                    """
+        stage('Deploy') {
+            when {
+                    expression { params.DELETE_DEPLOY == false }
+                }
+                steps {
+                    script {
+                        def releaseNames = [
+                            './cicd/helm': 'backend',
+                            './cicd/postgres': 'postgres',
+                            './cicd/redis': 'redis-cache'
+                        ]
+                        HELM_RELEASE_NAME = releaseNames.get(params.HELM_CHART_PATH, 'default-release')
+                        
+                        sh """
+                            helm upgrade --install ${HELM_RELEASE_NAME} ${params.HELM_CHART_PATH} \
+                                --namespace ${NAMESPACE} \
+                                --create-namespace \
+                                --set service.type=LoadBalancer \
+                                --set image.tag=${params.IMAGE_TAG}
+                        """
+                    }
                 }
             }
         }
-    }
 
     post {
         success {
