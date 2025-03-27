@@ -22,9 +22,9 @@ resources:
 
 # Настройки PostgreSQL
 postgresql:
-  database: "myapp"
+  database: "postgres"
   username: "postgres"
-  password: "changeme"
+  password: "postgres"
   port: 5432
   config:
     max_connections: "100"
