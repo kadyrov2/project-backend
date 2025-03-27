@@ -81,7 +81,8 @@ pipeline {
                             './cicd/postgres': 'postgres',
                             './cicd/redis': 'redis-cache'
                         ]
-                        HELM_RELEASE_NAME = releaseNames.get(params.HELM_CHART_PATH, 'default-release')
+                        
+                        HELM_RELEASE_NAME = releaseNames.get(params.HELM_CHART_PATH, './cicd/helm')
                         
                         sh """
                             helm upgrade --install ${HELM_RELEASE_NAME} ${params.HELM_CHART_PATH} \
