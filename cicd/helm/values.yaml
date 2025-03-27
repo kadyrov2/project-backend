@@ -45,7 +45,13 @@ ingress:
           pathType: ImplementationSpecific
   tls: []
 
-resources: {}
+resources:
+  requests:
+    cpu: "500m"    # 0.5 CPU ядра
+    memory: "512Mi" # 512 МБ памяти
+  limits:
+    cpu: "2000m"   # 2 CPU ядра
+    memory: "2048Mi" # 2 ГБ памяти
 
 livenessProbe:
   httpGet:
