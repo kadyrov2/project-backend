@@ -15,7 +15,7 @@ internal class Program
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.GrafanaLoki(
-                "http://10.96.149.235:3100", 
+                "http://10.96.149.235:80", 
                 labels: new List<LokiLabel> { new() { Key = "app", Value = "tim-app" } }
             )
             .CreateLogger();
