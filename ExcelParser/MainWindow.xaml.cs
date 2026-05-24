@@ -125,7 +125,10 @@ namespace ExcelParser
             }
 
             // Чтение данных начиная со второй строки
-            for (int row = 2; row <= worksheet.LastRowUsed()?.RowNumber() ?? 1; row++)
+            var lastRow = worksheet.LastRowUsed();
+            var lastRowNumber = lastRow?.RowNumber() ?? 1;
+            
+            for (int row = 2; row <= lastRowNumber; row++)
             {
                 var apartmentCell = worksheet.Cell(row, 1); // Предполагаем, что номер квартиры в первой колонке
                 
