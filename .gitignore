@@ -1,0 +1,21 @@
+```
+# Build artifacts
+*.obj
+*.exe
+*.dll
+*.pdb
+*.userprefs
+
+# Dependencies
+packages/
+bin/
+obj/
+
+# Logs
+*.log
+
+# User-specific files
+.vs/
+*.user
+*.suo
+```
