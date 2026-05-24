@@ -112,25 +112,21 @@ namespace ExcelParser
             var range = worksheet.RangeUsed();
             if (range == null) return records;
 
-            // Поиск колонок по заголовкам
-            var headersRow = 1;
-            var hotWaterPrevCol = FindColumn(worksheet, headersRow, "ГВС преды");
-            var hotWaterCurrentCol = FindColumn(worksheet, headersRow, "ГВС конеч");
-            var coldWaterPrevCol = FindColumn(worksheet, headersRow, "ХВС преды");
+            // Номера колонок согласно структуре Excel:
+            // ГВС предыдущее = 4, ГВС конечное = 5, ХВС предыдущее = 7, ХВС конечное = 8
+            const int hotWaterPrevCol = 4;
+            const int hotWaterCurrentCol = 5;
+            const int coldWaterPrevCol = 7;
+            const int coldWaterCurrentCol = 8;
+            const int apartmentCol = 1; // Номер квартиры в первом столбце
 
-            if (hotWaterPrevCol == 0 || hotWaterCurrentCol == 0 || coldWaterPrevCol == 0)
-            {
-                throw new Exception("Не найдены необходимые колонки в Excel файле.\n" +
-                    "Ожидаемые колонки: 'ГВС преды', 'ГВС конеч', 'ХВС преды'");
-            }
-
-            // Чтение данных начиная со второй строки
+            // Чтение данных начиная со второй строки (первая строка - заголовки)
             var lastRow = worksheet.LastRowUsed();
             var lastRowNumber = lastRow?.RowNumber() ?? 1;
             
             for (int row = 2; row <= lastRowNumber; row++)
             {
-                var apartmentCell = worksheet.Cell(row, 1); // Предполагаем, что номер квартиры в первой колонке
+                var apartmentCell = worksheet.Cell(row, apartmentCol);
                 
                 if (apartmentCell.IsEmpty()) continue;
 
@@ -142,38 +138,24 @@ namespace ExcelParser
                     ColdWaterPrevious = GetDoubleValue(worksheet, row, coldWaterPrevCol)
                 };
 
+                // Получаем текущие показания ХВС
+                record.ColdWaterCurrent = GetDoubleValue(worksheet, row, coldWaterCurrentCol);
+
                 // Вычисляем потребление
                 if (record.HotWaterPrevious.HasValue && record.HotWaterCurrent.HasValue)
                 {
                     record.HotWaterConsumption = record.HotWaterCurrent.Value - record.HotWaterPrevious.Value;
                 }
 
-                if (record.ColdWaterPrevious.HasValue)
+                if (record.ColdWaterPrevious.HasValue && record.ColdWaterCurrent.HasValue)
                 {
-                    // Если есть колонка ХВС конечное, можно добавить аналогично
-                    record.ColdWaterConsumption = null; // Пока нет данных
+                    record.ColdWaterConsumption = record.ColdWaterCurrent.Value - record.ColdWaterPrevious.Value;
                 }
 
                 records.Add(record);
             }
 
             return records;
-        }
-
-        private int FindColumn(IXLWorksheet worksheet, int headerRow, string partialName)
-        {
-            var lastCol = worksheet.LastColumnUsed()?.ColumnNumber() ?? 0;
-            
-            for (int col = 1; col <= lastCol; col++)
-            {
-                var cellValue = worksheet.Cell(headerRow, col).GetValue<string>()?.ToLower() ?? "";
-                if (cellValue.Contains(partialName.ToLower()))
-                {
-                    return col;
-                }
-            }
-
-            return 0;
         }
 
         private double? GetDoubleValue(IXLWorksheet worksheet, int row, int column)
